@@ -1,5 +1,14 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import registrationRoutes from "./routes/registrationRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+
+
 
 const app = express();
 app.use(cors());
