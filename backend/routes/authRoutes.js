@@ -1,90 +1,97 @@
+import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { hashPassword, comparePassword } from "../utils/passwordUtils.js";
 import { generateToken } from "../utils/tokenUtils.js";
 import { AppError } from "../middleware/errorHandler.js";
 
+const router = express.Router();
 const prisma = new PrismaClient();
 
-export const registerUser = async (email, password, name, phone) => {
-  // all the user checks an bull....
-  const existingUser = await prisma.user.findUnique({
-    where: { email },
-  }); // why are there funcions for everything, lemme do some algorithms stuff.
+// POST /api/auth/register - Handles user creation and JWT return
+router.post("/register", async (req, res, next) => {
+  try {
+    const { email, password, name, phone } = req.body;
 
-  if (existingUser) {
-    // i will optimize this later
-    throw new AppError("Email already registered", 400);
+    // 1. Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      // Use the AppError class to send a clean error response
+      throw new AppError("Email already registered", 400);
+    }
+
+    // 2. Hash the password using the utility function
+    const hashedPassword = await hashPassword(password);
+
+    // 3. Create the user record
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+        phone,
+        role: "user", // Default role
+      },
+    });
+
+    // 4. Generate token using the utility function
+    const token = generateToken(user.id, user.role);
+
+    // 5. Send successful response
+    res.status(201).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+      token,
+    });
+  } catch (error) {
+    // Pass any error to the central errorHandler middleware
+    next(error);
   }
-  // hash the pword although everyone makes the same password dd
-  const hashedPassword = await hashPassword(password);
+});
 
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: hashedPassword,
-      name,
-      phone,
-      role: "user",
-    },
-  });
-  //token and user
-  const token = generateToken(user.id, user.role);
+// POST /api/auth/login - Handles user login and JWT return
+router.post("/login", async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
 
-  return {
-    user: {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-    },
-    token,
-  };
-};
-//login search by email
-export const loginUser = async (email, password) => {
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
-  //user check
-  if (!user) {
-    throw new AppError("Invalid credentials", 401);
+    // 1. Find user by email
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new AppError("Invalid credentials", 401);
+    }
+
+    // 2. Verify password using the utility function
+    const isValidPassword = await comparePassword(password, user.password);
+
+    if (!isValidPassword) {
+      throw new AppError("Invalid credentials", 401);
+    }
+
+    // 3. Generate token
+    const token = generateToken(user.id, user.role);
+
+    // 4. Send successful response
+    res.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+      token,
+    });
+  } catch (error) {
+    next(error);
   }
-  // password check
-  const isValidPassword = await comparePassword(password, user.password);
-  //validate password
-  if (!isValidPassword) {
-    throw new AppError("Invalid credentials", 401);
-  }
-  //if al good generate token
-  const token = generateToken(user.id, user.role);
+});
 
-  return {
-    user: {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-    },
-    token,
-  };
-};
-// same stuff as above just search by id
-export const getUserById = async (userId) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      phone: true,
-      role: true,
-      createdAt: true,
-    },
-  });
-
-  if (!user) {
-    throw new AppError("User not found", 404);
-  }
-
-  return user;
-};
+export default router;

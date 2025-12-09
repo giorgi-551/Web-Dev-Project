@@ -1,18 +1,15 @@
-import jwt from "jsonwebtoken";
-
-const JWT_SECRET = process.env.JWT_SECRET || "secret key we make, but it seems only me doing this xdd";
-const JWT_EXPIRES_IN = "7d";
+import jwt from 'jsonwebtoken';
 
 export const generateToken = (userId, role) => {
-  return jwt.sign({ userId, role }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN,
+  // Signs the token with user info and a secret key from environment variables
+  return jwt.sign({ userId, role }, process.env.JWT_SECRET, {
+    expiresIn: '30d', // Token expires in 30 days
   });
 };
 
 export const verifyToken = (token) => {
-  try {
-    return jwt.verify(token, JWT_SECRET);
-  } catch (error) {
-    return null;
-  }
+  // Decodes and validates the token
+  return jwt.verify(token, process.env.JWT_SECRET);
 };
+
+// install this dependency: npm install jsonwebtoken and set a JWT_SECRET key in your .env file.
