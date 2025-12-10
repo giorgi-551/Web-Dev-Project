@@ -1,7 +1,7 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
-import { AppError } from "../middleware/errorHandler.js"; 
-import { protect, admin } from "../middleware/authMiddleware.js"; 
+import { AppError } from "../../middleware/errorHandler.js"; 
+import { protect, admin } from "../../middleware/authMiddleware.js"; 
 
 const router = express.Router();
 const prisma = new PrismaClient();

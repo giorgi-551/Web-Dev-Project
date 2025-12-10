@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { AppError } from "./errorHandler.js"; // Needs AppError to throw custom HTTP errors
-import { verifyToken } from "../utils/tokenUtils.js";
+import { verifyToken } from "../src/utils/tokenUtils.js";
 
 const prisma = new PrismaClient();
 
