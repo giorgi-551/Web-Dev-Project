@@ -1,0 +1,237 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.signin-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #7ef0ff 0%, #00867a 100%);
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 2rem;
+}
+
+.login_box {
+    width: 100%;
+    max-width: 500px;
+    background: rgb(70, 202, 255);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgb(70, 202, 255);
+    border-radius: 20px;
+    padding: 60px 50px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 0.8s ease;
+}
+
+.login_header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.login_header span {
+    font-size: 40px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.input_box {
+    position: relative;
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.input-field {
+    width: 100%;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 3px solid rgba(130, 248, 248, 0.523);
+    border-radius: 10px;
+    padding: 0 50px 0 30px;
+    font-size: 20px;
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: #f84f4f;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.input-field::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.label {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.input-field:focus ~ .label,
+.input-field:valid ~ .label {
+    top: -15px;
+    left: 15px;
+    font-size: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 4px 12px;
+    border-radius: 10px;
+    color: #fff;
+}
+
+.icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+}
+
+.remember-me input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: #002fff;
+}
+
+.remember-me label {
+    cursor: pointer;
+}
+
+.forgot-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    color: #000;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.forgot-popup input {
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.forgot-popup button {
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: none;
+    background: #6366f1;
+    color: white;
+    cursor: pointer;
+}
+
+.input-submit {
+    width: 100%;
+    height: 50px;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #667eea;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.input-submit:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.input-submit:active {
+    transform: translateY(0);
+}
+
+.register {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #fff;
+}
+
+.register a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.register a:hover {
+    text-decoration: underline;
+}
+
+.forgot-password {
+    text-align: center;
+    margin-top: 20px; 
+    font-size: 14px;
+    color: #fff;
+    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+    .wrapper {
+        width: 90%;
+        padding: 10px;
+    }
+    
+    .login_box {
+        padding: 30px 20px;
+    }
+    
+    .login_header span {
+        font-size: 28px;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}

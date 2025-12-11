@@ -1,0 +1,39 @@
+{
+  "name": "vvirtual-event-registration-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Virtual Event Registration Platform",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "node prisma/seed.js",
+    "prisma:studio": "prisma studio"
+  },
+  "keywords": [
+    "event",
+    "registration",
+    "api"
+  ],
+  "author": "Irakli tavadze NIkoloz Eubidze Giorgi Maisuradze",
+  "license": "ISU",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "express-validator": "^7.3.1",
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^6.10.1",
+    "qrcode": "^1.5.4",
+    "stripe": "^14.25.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "prisma": "^5.22.0"
+  },
+  "type": "module"
+}

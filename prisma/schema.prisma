@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String 
+  name          String
+  phone         String?
+  role          String         @default("user")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  registrations Registration[]
+  events        Event[]
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  imageUrl    String
+  startTime   DateTime
+  endTime     DateTime
+  timezone    String   @default("UTC")
+  meetingLink String?
+  capacity    Int
+  organizerId String
+  categoryId  String
+  status      String   @default("draft")
+  isFeatured  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizer     User           @relation(fields: [organizerId], references: [id])
+  category      Category       @relation(fields: [categoryId], references: [id])
+  registrations Registration[]
+  tickets       Ticket[]
+}
+
+model Ticket {
+  id            String         @id @default(uuid())
+  eventId       String
+  ticketType    String
+  name          String
+  description   String?
+  price         Decimal        @default(0.0)
+  quantity      Int
+  sold          Int            @default(0)
+  saleStart     DateTime?
+  saleEnd       DateTime?
+  event         Event          @relation(fields: [eventId], references: [id])
+  registrations Registration[]
+}
+
+model Registration {
+  id       String @id @default(uuid())
+  userId   String
+  eventId  String
+  ticketId String
+
+  status       String   @default("pending")
+  paymentId    String?  @unique
+  ticketCode   String   @unique
+  qrCodeUrl    String?
+  checkedIn    Boolean  @default(false)
+  registeredAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  event  Event  @relation(fields: [eventId], references: [id])
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+
+  payment Payment? @relation(name: "RegistrationPayment", fields: [paymentId], references: [id])
+
+  @@unique([userId, eventId])
+}
+
+model Payment {
+  id              String   @id @default(uuid())
+  stripePaymentId String   @unique
+  amount          Decimal
+  currency        String   @default("usd")
+  status          String
+  paidAt          DateTime @default(now())
+
+  registration Registration? @relation(name: "RegistrationPayment")
+}
+
+model Category {
+  id     String  @id @default(uuid())
+  name   String
+  slug   String  @unique
+  color  String  @default("#6366f1")
+  events Event[]
+}
+
+model PromoCode {
+  id         String   @id @default(uuid())
+  code       String   @unique
+  discount   Decimal
+  type       String
+  maxUses    Int
+  usedCount  Int      @default(0)
+  validFrom  DateTime
+  validUntil DateTime
+  isActive   Boolean  @default(true)
+}
